@@ -1,0 +1,5 @@
+class PaginacionPropietarioDTO {
+    constructor(parameters) {
+        
+    }
+}

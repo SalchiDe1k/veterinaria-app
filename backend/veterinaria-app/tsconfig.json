@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "module": "commonjs",
+      "esModuleInterop": true,
+      "target": "ES2022",
+      "experimentalDecorators": true,     // Habilitar decoradores experimentales
+      "emitDecoratorMetadata": true,      // Emitir metadatos para decoradores
+      "useDefineForClassFields": true,    // Ajuste recomendado para propiedades de clase
+      "strictPropertyInitialization": false, // Evita problemas de inicialización estricta
+      "moduleResolution": "node",
+      "sourceMap": false,
+      "rootDir": "./src",
+      "outDir": "./dist"
+    },
+    "lib": ["es2015"]
+}
