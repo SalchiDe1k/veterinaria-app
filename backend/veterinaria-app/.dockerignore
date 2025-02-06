@@ -1,0 +1,6 @@
+dist
+migrations
+node_modules
+.env
+migrate-mongo-config.js
+.git

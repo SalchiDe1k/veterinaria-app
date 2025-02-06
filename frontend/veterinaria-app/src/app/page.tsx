@@ -1,11 +1,18 @@
 "use client";
+
 import { Login } from "@/components/formularios/login";
 import { LoginModel } from "@/domain/models/login/login";
-import { redirect } from "next/navigation";
+import { baseUrlBackend, httpBackendApi } from "@/infrastructure/helpers/connections/config";
+import { useRouter } from "next/navigation"; // ✅ Usar useRouter()
+
 export default function Home() {
-  const handleLoginSubmit = (data: LoginModel) => {
-    console.log(data);
-    redirect("/home");
+  const router = useRouter(); // ✅ Instancia de router
+
+  const handleLoginSubmit = async (data: LoginModel) => {
+    const response = await httpBackendApi.post<{token : string}>(baseUrlBackend + "/auth", data); // ✅ Enviar datos al servidor
+    localStorage.setItem("token", response.token); // ✅ Guardar token en localStorage
+    httpBackendApi.setToken(response.token); // ✅ Establecer token en el cliente HTTP
+    router.push("/home"); // ✅ Redirigir correctamente
   };
 
   return (

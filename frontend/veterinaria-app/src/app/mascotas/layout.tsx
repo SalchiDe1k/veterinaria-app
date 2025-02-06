@@ -1,4 +1,4 @@
-import { Dashboard, NavbarHome } from "@/components";
+import { Dashboard } from "@/components";
 
 export default function RootLayout({
   children,

@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 
 interface PropsPropietarioFormulario {
   routeCancel: string;
+  buttonCancelShow?: boolean; // Mostrar o no el botón de cancelar
   initialData?: Partial<FormData>; // Datos iniciales para modo edición
   onSubmitHandler: (data: FormData) => void; // Función para manejar el envío del formulario
 }
@@ -34,6 +35,7 @@ type FormData = yup.InferType<typeof schema>;
 
 export const PropietarioFormulario = ({
   routeCancel,
+  buttonCancelShow = true,
   initialData = {},
   onSubmitHandler,
 }: PropsPropietarioFormulario) => {
@@ -104,11 +106,10 @@ export const PropietarioFormulario = ({
               id={field.name}
               placeholder={field.placeholder}
               {...register(field.name as keyof FormData)}
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
-                errors[field.name as keyof FormData]
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors[field.name as keyof FormData]
                   ? "border-red-500 focus:ring-red-500"
                   : "border-gray-300 focus:ring-green-500"
-              }`}
+                }`}
               aria-invalid={!!errors[field.name as keyof FormData]}
             />
             {errors[field.name as keyof FormData] && (
@@ -124,12 +125,14 @@ export const PropietarioFormulario = ({
         ))}
       </div>
       <div className="flex justify-end space-x-4 mt-6">
-        <Link
-          href={routeCancel}
-          className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition"
-        >
-          Cancelar
-        </Link>
+        {buttonCancelShow && (
+          <Link
+            href={routeCancel}
+            className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition"
+          >
+            Cancelar
+          </Link>
+        )}
         <button
           type="submit"
           className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"

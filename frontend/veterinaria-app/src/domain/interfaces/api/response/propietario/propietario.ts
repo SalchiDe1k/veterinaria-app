@@ -1,6 +1,9 @@
 export interface PropietarioResponse {
     id : string,
-    nombre : string,
+    primerNombre: string;
+    segundoNombre?: string;
+    primerApellido: string;
+    segundoApellido: string;
     correo : string,
     numeroIdentificacion : string,
     numeroTelefono : string,

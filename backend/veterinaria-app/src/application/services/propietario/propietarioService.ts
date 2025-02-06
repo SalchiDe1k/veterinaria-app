@@ -11,20 +11,31 @@ export class PropietarioService {
   async create(
     propietarioCreateDTO: PropietarioCreateDTO
   ): Promise<PropietarioDTO> {
-    const { numero_identificacion } = propietarioCreateDTO;
+    const { numero_identificacion, correo } = propietarioCreateDTO;
 
-    if (
-      await this._propietarioRepository.existByNumeroIdentificacion(
+    // Validar existencia de número de identificación y correo
+    const [identificacionExiste, correoExiste] = await Promise.all([
+      this._propietarioRepository.existByNumeroIdentificacion(
         numero_identificacion
-      )
-    ) {
+      ),
+      this._propietarioRepository.existByCorreo(correo),
+    ]);
+
+    if (identificacionExiste || correoExiste) {
+      const errores = [];
+      if (identificacionExiste)
+        errores.push("El número de identificación se encuentra registrado");
+      if (correoExiste)
+        errores.push("El correo electrónico se encuentra registrado");
+
       throw new ResponseException<IPropietario>(
         StatusCodes.CONFLICT,
-        ["El número de identificación se encuentra registrado"],
+        errores,
         propietarioCreateDTO.toObject()
       );
     }
 
+    // Crear propietario
     const propietario = await this._propietarioRepository.create(
       propietarioCreateDTO.toObject()
     );
@@ -50,8 +61,33 @@ export class PropietarioService {
     return {
       ...propietarios,
       data: propietarios.data.map(
-        (propietario) => new PropietarioDTO(propietario)
+        (propietario) => new PropietarioDTO(propietario?? null)
       ),
     };
+  }
+
+  async getById(id: string): Promise<PropietarioDTO> {
+    const propietario = await this._propietarioRepository.getById(id);
+    return new PropietarioDTO(propietario);
+  }
+
+  async update(
+    id: string,
+    data: PropietarioCreateDTO
+  ): Promise<PropietarioDTO> {
+    const propietarioUpdate = await this._propietarioRepository.update(
+      id,
+      data.toObject()
+    );
+
+    const propietarioDTO = new PropietarioDTO(propietarioUpdate);
+
+    return propietarioDTO;
+  }
+
+  async search(query: string): Promise<PropietarioDTO[]> {
+    const propietarios = await this._propietarioRepository.search(query);
+
+    return propietarios.map((propietario) => new PropietarioDTO(propietario));
   }
 }

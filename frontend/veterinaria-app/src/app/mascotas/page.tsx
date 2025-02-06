@@ -1,9 +1,9 @@
 "use client";
-import { propietarioService } from "@/application/services";
-import { PropietariosTable, SkeletonPropietarioTable } from "@/components";
+import {  SkeletonPropietarioTable } from "@/components";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { MascotasTable } from "@/components/tables/mascotas/mascotatable";
+import { mascotaRepository } from "@/infrastructure/repositories";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Home() {
@@ -29,8 +29,6 @@ export default function Home() {
   });
 
   const [filteredPropietarios, setFilteredPropietarios] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterColumn, setFilterColumn] = useState("nombre");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,11 +36,12 @@ export default function Home() {
     if (!url) return;
     try {
       setLoading(true);
-      const response = await propietarioService.getAll(url);
+      const response = await mascotaRepository.getMascotas(url);
+      response.links = response.links.slice(1, -1);
       setPropietarios(response);
       setFilteredPropietarios(response.data);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError((err as Error).message);
     } finally {
       setLoading(false);
     }
@@ -51,11 +50,14 @@ export default function Home() {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await propietarioService.getAll();
+        const response = await mascotaRepository.getMascotas();
+        response.links = response.links.slice(1, -1);
+        console.log(response);
+        
         setPropietarios(response);
         setFilteredPropietarios(response.data);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) {
+        setError((err as Error).message);
       } finally {
         setLoading(false);
       }
@@ -67,23 +69,6 @@ export default function Home() {
     await fetchItems(url!);
   };
 
-  const handleMascotasLinkClick = (id: string) => {
-    return redirect(`/propietarios-&-mascotas/mascotas-propietario/${id}`);
-  };
-
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    const filtered = propietario.data.filter((item) =>
-      item[filterColumn]?.toLowerCase().includes(query.toLowerCase())
-    );
-    setFilteredPropietarios(filtered);
-  };
-
-  const handleFilterChange = (column: string) => {
-    setFilterColumn(column);
-    setSearchQuery(""); // Reinicia el campo de búsqueda al cambiar la columna
-    setFilteredPropietarios(propietario.data); // Muestra todos los datos inicialmente
-  };
 
   return (
     <div className="p-6 space-y-6">
@@ -98,26 +83,7 @@ export default function Home() {
         </Link>
       </div>
 
-      {/* Filtros */}
-      <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-2 sm:space-y-0">
-        <select
-          className="select select-bordered select-sm"
-          value={filterColumn}
-          onChange={(e) => handleFilterChange(e.target.value)}
-        >
-          <option value="nombre">Nombre</option>
-          <option value="correo">Correo</option>
-          <option value="numero identificacion">#Identificación</option>
-        </select>
-        <input
-          type="text"
-          className="input input-sm input-bordered flex-1"
-          placeholder={`Buscar por ${filterColumn}...`}
-          value={searchQuery}
-          onChange={(e) => handleSearch(e.target.value)}
-        />
-      </div>
-
+    
       <div className="bg-white rounded-lg shadow-md">
         {loading && <SkeletonPropietarioTable />}
         {error && (
@@ -131,9 +97,9 @@ export default function Home() {
           </div>
         )}
         {!loading && !error && filteredPropietarios.length > 0 && (
-          <PropietariosTable
+          <MascotasTable
             rows={filteredPropietarios}
-            onMascotasLinkClick={handleMascotasLinkClick}
+            // onMascotasLinkClick={handleMascotasLinkClick}
           />
         )}
       </div>

@@ -1,22 +1,11 @@
 /**
- * Clase para manejar solicitudes HTTP.
- * Proporciona métodos convenientes para realizar solicitudes GET, POST, PUT y DELETE.
+ * Clase para manejar solicitudes HTTP con autenticación JWT.
  */
 export class Http {
-  /**
-   * La URL base para las solicitudes HTTP.
-   */
   private baseURL: string;
-
-  /**
-   * Encabezados predeterminados para todas las solicitudes.
-   */
   private defaultHeaders: Record<string, string>;
+  private token: string | null = null; // 🔹 Variable para almacenar el token JWT
 
-  /**
-   * Crea una nueva instancia de HttpClient.
-   * @param baseURL - La URL base para todas las solicitudes.
-   */
   constructor(baseURL: string = "") {
     this.baseURL = baseURL;
     this.defaultHeaders = {
@@ -26,18 +15,25 @@ export class Http {
 
   /**
    * Establece encabezados predeterminados.
-   * @param headers - Los encabezados que se agregarán a los predeterminados.
+   * @param headers - Los encabezados adicionales.
    */
   setDefaultHeaders(headers: Record<string, string>): void {
     this.defaultHeaders = { ...this.defaultHeaders, ...headers };
   }
 
   /**
+   * Establece el token de autenticación.
+   * @param token - El token JWT.
+   */
+  setToken(token: string | null): void {
+    this.token = token;
+  }
+
+  /**
    * Método para manejar las solicitudes HTTP.
    * @param url - El endpoint de la solicitud.
-   * @param options - Opciones para la solicitud.
+   * @param options - Opciones de la solicitud.
    * @returns La respuesta en formato JSON.
-   * @throws Lanzará un error si la solicitud no es exitosa.
    */
   async request<T>(
     url: string,
@@ -54,7 +50,13 @@ export class Http {
       body = null,
       ...otherOptions
     } = options;
-    const mergedHeaders = { ...this.defaultHeaders, ...headers };
+
+    const mergedHeaders: Record<string, string> = { ...this.defaultHeaders, ...headers };
+
+    // 🔹 Si hay un token, se añade al encabezado Authorization
+    if (this.token) {
+      mergedHeaders["Authorization"] = `Bearer ${this.token}`;
+    }
 
     try {
       const response = await fetch(`${this.baseURL}${url}`, {
@@ -76,52 +78,18 @@ export class Http {
     }
   }
 
-  /**
-   * Realiza una solicitud GET.
-   * @param url - El endpoint de la solicitud.
-   * @param options - Opciones adicionales para la solicitud.
-   * @returns La respuesta en formato JSON.
-   */
   get<T>(url: string, options: Record<string, unknown> = {}): Promise<T> {
     return this.request<T>(url, { ...options, method: "GET" });
   }
 
-  /**
-   * Realiza una solicitud POST.
-   * @param url - El endpoint de la solicitud.
-   * @param data - El cuerpo de la solicitud.
-   * @param options - Opciones adicionales para la solicitud.
-   * @returns La respuesta en formato JSON.
-   */
-  post<T>(
-    url: string,
-    data: unknown,
-    options: Record<string, unknown> = {}
-  ): Promise<T> {
+  post<T>(url: string, data: unknown, options: Record<string, unknown> = {}): Promise<T> {
     return this.request<T>(url, { ...options, method: "POST", body: data });
   }
 
-  /**
-   * Realiza una solicitud PUT.
-   * @param url - El endpoint de la solicitud.
-   * @param data - El cuerpo de la solicitud.
-   * @param options - Opciones adicionales para la solicitud.
-   * @returns La respuesta en formato JSON.
-   */
-  put<T>(
-    url: string,
-    data: unknown,
-    options: Record<string, unknown> = {}
-  ): Promise<T> {
+  put<T>(url: string, data: unknown, options: Record<string, unknown> = {}): Promise<T> {
     return this.request<T>(url, { ...options, method: "PUT", body: data });
   }
 
-  /**
-   * Realiza una solicitud DELETE.
-   * @param url - El endpoint de la solicitud.
-   * @param options - Opciones adicionales para la solicitud.
-   * @returns La respuesta en formato JSON.
-   */
   delete<T>(url: string, options: Record<string, unknown> = {}): Promise<T> {
     return this.request<T>(url, { ...options, method: "DELETE" });
   }

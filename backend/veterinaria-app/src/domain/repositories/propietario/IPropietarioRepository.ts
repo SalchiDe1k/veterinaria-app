@@ -44,4 +44,8 @@ export interface IPropietarioRepository extends IRepository<IPropietario> {
     host: string,
     path: string
   ): Promise<Paginacion<IPropietario>>;
+
+  getById(id: string): Promise<IPropietario>;
+  search(query: string): Promise<IPropietario[]>;
+  existById(id: string): Promise<boolean>;
 }

@@ -2,7 +2,7 @@ import { PropietarioResponseDTO } from "@/application/dtos";
 
 interface PropietariosTableProps {
   rows: PropietarioResponseDTO[];
-  onMascotasLinkClick: (id: string) => string;
+  onMascotasLinkClick: (data : PropietarioResponseDTO) => void;
 }
 
 export const PropietariosTable = ({
@@ -14,6 +14,8 @@ export const PropietariosTable = ({
     { length: Math.max(0, totalRowsToDisplay - rows.length) },
     (_, index) => index
   );
+
+
 
   return (
     <div className="sm:overflow-x-auto rounded-lg shadow-lg border border-gray-300">
@@ -51,7 +53,7 @@ export const PropietariosTable = ({
                 <td className="px-4 py-3">{row.numeroIdentificacion}</td>
                 <td className="px-4 py-3">
                   <a
-                    onClick={() => console.log(row.id)} // Reemplaza con tu lógica de edición
+                    onClick={() => onMascotasLinkClick(row)} // Reemplaza con tu lógica de edición
                     className="font-medium text-blue-600 hover:underline cursor-pointer"
                   >
                     Editar

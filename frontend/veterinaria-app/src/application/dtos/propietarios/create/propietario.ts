@@ -34,7 +34,7 @@ export class PropietarioCreateDTO implements Propietario {
     }
 
     if (this.segundoApellido) {
-      data.segundoApellido = this.segundoNombre;
+      data.segundoApellido = this.segundoApellido;
     }
 
     return data;

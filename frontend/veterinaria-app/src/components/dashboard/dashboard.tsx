@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import Link from "next/link";
 import { ReactNode, useEffect, useState } from "react";
 
@@ -20,6 +21,7 @@ export const Dashboard = ({ children }: homeNavbarProps) => {
     { path: "/home", title: "Inicio" },
     { path: "/propietarios", title: "Propietarios" },
     { path: "/mascotas/", title: "Mascotas" },
+    { path: "/citas/", title: "Citas" },
   ];
 
   return (
@@ -84,9 +86,11 @@ export const Dashboard = ({ children }: homeNavbarProps) => {
               className="btn btn-ghost btn-circle avatar"
             >
               <div className="w-10 rounded-full">
-                <img
+                <Image
                   alt="User Avatar"
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                  width={40}
+                  height={40}
+                  src={"https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"}
                 />
               </div>
             </div>

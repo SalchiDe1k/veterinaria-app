@@ -1,4 +1,5 @@
 "use client";
+import { PropietarioResponseDTO } from "@/application/dtos";
 import { propietarioService } from "@/application/services";
 import { PropietariosTable, SkeletonPropietarioTable } from "@/components";
 import { Breadcrumbs } from "@/components/breadcrumbs";
@@ -41,8 +42,8 @@ export default function Home() {
       const response = await propietarioService.getAll(url);
       setPropietarios(response);
       setFilteredPropietarios(response.data);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError((err as Error).message);
     } finally {
       setLoading(false);
     }
@@ -54,8 +55,8 @@ export default function Home() {
         const response = await propietarioService.getAll();
         setPropietarios(response);
         setFilteredPropietarios(response.data);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) {
+        setError((err as Error).message);
       } finally {
         setLoading(false);
       }
@@ -67,8 +68,8 @@ export default function Home() {
     await fetchItems(url!);
   };
 
-  const handleMascotasLinkClick = (id: string) => {
-    return redirect(`/propietarios-&-mascotas/mascotas-propietario/${id}`);
+  const handleMascotasLinkClick = (data: PropietarioResponseDTO) => {
+    return redirect(`/propietarios/editar/${data.id}`);
   };
 
   const handleSearch = (query: string) => {
@@ -86,7 +87,7 @@ export default function Home() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-2">
       <Breadcrumbs items={breadcrumbItems} />
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">Propietarios</h1>
@@ -140,9 +141,8 @@ export default function Home() {
 
       <div className="flex justify-center items-center mt-4 space-x-2">
         <button
-          className={`btn btn-sm btn-outline ${
-            !propietario.prev_page_url ? "btn-disabled" : ""
-          }`}
+          className={`btn btn-sm btn-outline ${!propietario.prev_page_url ? "btn-disabled" : ""
+            }`}
           onClick={() => changePage(propietario.prev_page_url)}
           disabled={!propietario.prev_page_url}
         >
@@ -151,9 +151,8 @@ export default function Home() {
         {propietario.links.map((link, index) => (
           <button
             key={index}
-            className={`btn btn-sm btn-outline ${
-              link.active ? "btn-primary btn-disabled" : ""
-            }`}
+            className={`btn btn-sm btn-outline ${link.active ? "btn-primary btn-disabled" : ""
+              }`}
             onClick={() => changePage(link.url)}
             disabled={link.active}
           >
@@ -161,9 +160,8 @@ export default function Home() {
           </button>
         ))}
         <button
-          className={`btn btn-sm btn-outline ${
-            !propietario.next_page_url ? "btn-disabled" : ""
-          }`}
+          className={`btn btn-sm btn-outline ${!propietario.next_page_url ? "btn-disabled" : ""
+            }`}
           onClick={() => changePage(propietario.next_page_url)}
           disabled={!propietario.next_page_url}
         >

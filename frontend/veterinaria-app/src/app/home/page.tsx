@@ -1,12 +1,6 @@
-import { Dashboard } from "@/components";
-import { Breadcrumbs } from "@/components/breadcrumbs";
-import { Workspace } from "@/components/cards/workspace";
-import Image from "next/image";
+
 
 export default function Home() {
-  const breadcrumbItems = [{ label: "Inicio" }];
- 
-
   return (
     <div className="p-6 space-y-4">
     {/* Summary Cards */}

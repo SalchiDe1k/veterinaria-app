@@ -1,5 +1,5 @@
 export interface Response<T> {
     data?: T,
-    message: Array<string>,
+    messages: Array<string>,
     code: number
 }

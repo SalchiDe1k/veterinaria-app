@@ -9,11 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.15",
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/interaction": "^6.1.15",
+    "@fullcalendar/react": "^6.1.15",
+    "@fullcalendar/timegrid": "^6.1.15",
     "@hookform/resolvers": "^3.9.1",
     "next": "15.1.0",
     "react": "^19.0.0",
+    "react-calendar": "^5.1.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.1",
+    "react-select": "^5.9.0",
+    "sweetalert2": "^11.15.3",
     "yup": "^1.6.1"
   },
   "devDependencies": {

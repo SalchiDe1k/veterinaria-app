@@ -70,10 +70,6 @@ export class PropietarioCreateDTO implements IPropietarioCreate {
     message: "El campo número de teléfono debe ser una cadena de texto.",
   })
   @IsNotEmpty({ message: "El campo número de teléfono no puede estar vacío." })
-  @Matches(/^(\+57|57)?\d{10}$/, {
-    message:
-      "El número de teléfono debe ser un número válido en Colombia con 10 dígitos, con o sin el prefijo +57.",
-  })
   numero_telefono: string;
 
   /**
@@ -133,7 +129,7 @@ export class PropietarioCreateDTO implements IPropietarioCreate {
     }
 
     if (this.segundoApellido) {
-      data.segundoApellido = this.segundoNombre;
+      data.segundoApellido = this.segundoApellido;
     }
 
     return data;
